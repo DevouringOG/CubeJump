@@ -1,6 +1,7 @@
 from Doodler import Doodler
 from Platforms import *
 from MenuScreens import start_screen
+from Monster import *
 
 
 def game_over_message(surface, doodler_score):
@@ -57,9 +58,10 @@ def play(screen, level):
     finish_score = level_config["finish_score"]
     all_sprites = pg.sprite.Group()
     platforms = pg.sprite.Group()
+    monsters_group = pg.sprite.Group()
     doodler = Doodler(WIDTH // 2 - 50, HEIGHT - 115, all_sprites)
     create_platforms(platforms, all_sprites, platforms_config)
-    score = max_doodler_y = game_over = finish = 0
+    score = max_doodler_y = game_over = finish = monsters = 0
     clock = pg.time.Clock()
 
     # Main loop
@@ -71,7 +73,7 @@ def play(screen, level):
                 return
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and game_over:
                 restart(doodler, platforms)
-                score = max_doodler_y = game_over = 0
+                score = max_doodler_y = game_over = monsters = 0
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and finish:
                 available_levels.append(level + 1)
                 level = start_screen(screen)
@@ -83,14 +85,17 @@ def play(screen, level):
                 platforms = pg.sprite.Group()
                 doodler = Doodler(WIDTH // 2 - 50, HEIGHT - 115, all_sprites)
                 create_platforms(platforms, all_sprites, platforms_config)
-                score = max_doodler_y = game_over = finish = 0
+                score = max_doodler_y = game_over = finish = monsters = 0
 
         platforms.draw(screen)
         platforms.update()
 
         doodler.move(pg.key.get_pressed())
-        doodler.update(platforms)
+        doodler.update(platforms, monsters_group, game_over)
         doodler.render(screen)
+        monsters_group.draw(screen)
+        for monster in monsters_group:
+            monster.move()
 
         # Camera
         if doodler.jump_power < 0 and doodler.rect.y < HEIGHT // 3:
@@ -107,6 +112,12 @@ def play(screen, level):
         # Show score
         score_label = font.render(f"Score: {score}/{finish_score}", True, 'black')
         screen.blit(score_label, (10, 10))
+
+        if monsters < score // 1000:
+            monster = Monster(all_sprites)
+            monsters_group.add(monster)
+            all_sprites.add(monster)
+            monsters += 1
 
         # Game over check
         if score >= finish_score:

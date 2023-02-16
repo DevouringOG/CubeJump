@@ -12,9 +12,19 @@ class Doodler(pg.sprite.Sprite):
         self.rect.y = y
         self.jump_power = -15
 
-    def update(self, platforms):
+    def update(self, platforms, monsters_group, game_over):
         self.rect.y += self.jump_power
         self.jump_power += GRAVITY
+        for monster in monsters_group:
+            if self.rect.colliderect(monster):
+                if self.jump_power > 0 and monster.rect.y - self.rect.y >= 69:
+                    self.rect.bottom = monster.rect.top
+                    self.jump_power = -15
+                    monsters_group.remove(monster)
+                else:
+                    game_over = True
+                    monsters_group.remove(monster)
+                    return
         for platform in platforms:
             if self.rect.colliderect(platform) and self.jump_power > 0 and platform.rect.y - self.rect.y >= 69:
                 self.rect.bottom = platform.rect.top
