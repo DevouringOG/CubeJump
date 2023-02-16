@@ -6,6 +6,7 @@ game_over_font = pg.font.Font("minecraft-1-1.otf", 70)
 restart_font = pg.font.Font("minecraft-1-1.otf", 15)
 logo_font = pg.font.Font('logo_font.ttf', 85)
 GRAVITY = 0.75
+VOL = 1
 platform_y_cords = [i for i in range(100, 985, 100)]
 
 START_BUTTON_EVENT = pg.event.Event(pg.USEREVENT + 1)
