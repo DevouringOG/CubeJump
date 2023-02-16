@@ -4,7 +4,7 @@ from GUI import Button
 
 def start_screen(surface):
     background = pg.image.load("images/menu_background.png")
-    surface.blit(background,  (0, 0))
+    surface.blit(background, (0, 0))
 
     logo = logo_font.render("CUBEJUMP", True, (0, 0, 0))
     surface.blit(logo, ((WIDTH - logo.get_width()) // 2, 200))
@@ -115,6 +115,17 @@ def about(surface):
     gui_sprites = pg.sprite.Group()
     back_button = Button((55, 405), "", BACK_BUTTON_EVENT, gui_sprites, base_image_filename="about_back_button.png",
                          hover_image_filename="hover_about_back_button.png")
+
+    about_text = [(about_font.render("The main goal of the game is to", True, "black"), (80, 500)),
+                  (about_font.render("get as high as possible on the", True, "black"), (80, 530)),
+                  (about_font.render("platforms and score as many", True, "black"), (80, 560)),
+                  (about_font.render("points as possible. The hero", True, "black"), (80, 590)),
+                  (about_font.render("controlled using two buttons", True, "black"), (80, 620)),
+                  (about_font.render("(left, right)", True, "black"), (80, 650)),
+                  (font.render("ABOUT", True, "black"), (232, 445))]
+    for i in about_text:
+        print(i[0].get_width())
+        surface.blit(i[0], (i[1][0], i[1][1]))
 
     while True:
         mouse_click = False
