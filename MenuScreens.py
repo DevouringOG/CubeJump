@@ -87,11 +87,14 @@ def settings_menu(surface):
     logo = logo_font.render("SETTINGS", True, (0, 0, 0))
     surface.blit(logo, ((WIDTH - logo.get_width()) // 2, 200))
 
+    volume_text = font.render("volume", True, "black")
+    surface.blit(volume_text, (50, 430))
+
     gui_sprites = pg.sprite.Group()
     Button((20, 20), "back", BACK_BUTTON_EVENT, gui_sprites, base_image_filename="back_button.png",
            hover_image_filename="hover_back_button.png")
 
-    SpinBox(surface, (200, 400), 1, 1, 5, UP_SOUND_VALUE_EVENT, DOWN_SOUND_VALUE_EVENT, gui_sprites)
+    SpinBox(surface, (220, 400), 1, 1, 5, UP_SOUND_VALUE_EVENT, DOWN_SOUND_VALUE_EVENT, gui_sprites)
 
     while True:
         mouse_click = False

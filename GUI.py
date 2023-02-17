@@ -73,11 +73,8 @@ class SpinBox(pg.sprite.Sprite):
 
         surface.blit(self.spin_box_image, (position[0] + self.rect.width + self.rect.width // 4, position[1]))
         self.value = default_value
-        self.value_text = font.render(str(default_value), True, "black")
-        surface.blit(self.value_text, (position[0] + self.rect.width + self.rect.width // 4 +
-                                       (self.spin_box_image.get_width() - self.value_text.get_width()) // 2,
-                                       position[1] +
-                                       (self.spin_box_image.get_height() - self.value_text.get_height()) // 2))
+        self.value_text = game_over_font.render(str(default_value), True, "black")
+        surface.blit(self.value_text, (self.pos[0] + self.rect.width * 1.8, self.pos[1] + self.rect.height * 0.4))
 
     def update(self, mouse_pos: tuple, mouse_click: bool):
         if self.rect.collidepoint(*mouse_pos):
@@ -95,9 +92,6 @@ class SpinBox(pg.sprite.Sprite):
             self.surface.blit(self.hover_up_image, self.up_pos)
         else:
             self.surface.blit(self.up_image, self.up_pos)
-        self.value_text = font.render(str(self.value), True, "black")
+        self.value_text = game_over_font.render(str(self.value), True, "black")
         self.surface.blit(self.spin_box_image, (self.pos[0] + self.rect.width + self.rect.width // 4, self.pos[1]))
-        self.surface.blit(self.value_text, (self.pos[0] + self.rect.width + self.rect.width // 4 +
-                                            (self.spin_box_image.get_width() - self.value_text.get_width()) // 2,
-                                            self.pos[1] +
-                                            (self.spin_box_image.get_height() - self.value_text.get_height()) // 2))
+        self.surface.blit(self.value_text, (self.pos[0] + self.rect.width * 1.8, self.pos[1] + self.rect.height * 0.4))
