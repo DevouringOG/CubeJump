@@ -96,6 +96,8 @@ def settings_menu(surface):
 
     SpinBox(surface, (220, 400), 1, 1, 5, UP_SOUND_VALUE_EVENT, DOWN_SOUND_VALUE_EVENT, gui_sprites)
 
+    Switcher(surface, (50, 500), ON_EVENT, OFF_EVENT, gui_sprites)
+
     while True:
         mouse_click = False
 
@@ -108,6 +110,10 @@ def settings_menu(surface):
                 print("UP")
             if event.type == DOWN_SOUND_VALUE_EVENT.type:
                 print("DOWN")
+            if event.type == OFF_EVENT.type:
+                print("OFF")
+            if event.type == ON_EVENT.type:
+                print("ON")
             if event.type == BACK_BUTTON_EVENT.type:
                 return
 
@@ -132,7 +138,6 @@ def about(surface):
                   (about_font.render("(left, right)", True, "black"), (80, 650)),
                   (font.render("ABOUT", True, "black"), (232, 445))]
     for i in about_text:
-        print(i[0].get_width())
         surface.blit(i[0], (i[1][0], i[1][1]))
 
     while True:
