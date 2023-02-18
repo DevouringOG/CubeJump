@@ -20,7 +20,13 @@ UP_SOUND_VALUE_EVENT = pg.event.Event(pg.USEREVENT + 8)
 DOWN_SOUND_VALUE_EVENT = pg.event.Event(pg.USEREVENT + 9)
 OFF_EVENT = pg.event.Event(pg.USEREVENT + 10)
 ON_EVENT = pg.event.Event(pg.USEREVENT + 11)
-levels_config = {1: {"background": (153, 229, 80), "platforms": (9, 0, 0, 0), "finish_score": 1500},
-                 2: {"background": (223, 113, 38), "platforms": (6, 3, 0, 0), "finish_score": 3000},
-                 3: {"background": (91, 110, 225), "platforms": (3, 3, 3, 0), "finish_score": 5000}}
-available_levels = [1, 2, 3]
+FREE_LEVEL_BUTTON_EVENT = pg.event.Event(pg.USEREVENT + 12)
+levels_config = {1: {"background": (153, 229, 80), "message_color": (171, 194, 112), "platforms": (9, 0, 0, 0),
+                     "finish_score": 2000},
+                 2: {"background": (223, 113, 38), "message_color": (181, 87, 27), "platforms": (6, 3, 0, 0),
+                     "finish_score": 2000},
+                 3: {"background": (255, 201, 60), "message_color": (206, 149, 0), "platforms": (3, 3, 3, 0),
+                     "finish_score": 2000},
+                 4: {"background": (11, 128, 210), "message_color": (45, 104, 146), "platforms": (3, 3, 3, 0),
+                     "finish_score": float("inf")}}
+available_levels = [1]

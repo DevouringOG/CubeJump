@@ -53,6 +53,7 @@ def levels_menu(surface):
            hover_image_filename="2level_hover.png", lock=True if 2 not in available_levels else False)
     Button((415, 400), "3", LEVEL3_BUTTON_EVENT, gui_sprites, base_image_filename="3level.png",
            hover_image_filename="3level_hover.png", lock=True if 3 not in available_levels else False)
+    Button((150, 600), "FREE MODE", FREE_LEVEL_BUTTON_EVENT, gui_sprites)
     Button((20, 20), "back", BACK_BUTTON_EVENT, gui_sprites, base_image_filename="back_button.png",
            hover_image_filename="hover_back_button.png")
 
@@ -72,6 +73,8 @@ def levels_menu(surface):
             if event.type == LEVEL3_BUTTON_EVENT.type:
                 if 3 in available_levels:
                     return 3
+            if event.type == FREE_LEVEL_BUTTON_EVENT.type:
+                return 4
             if event.type == BACK_BUTTON_EVENT.type:
                 return 0
 
