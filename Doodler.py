@@ -7,32 +7,33 @@ class Doodler(pg.sprite.Sprite):
         super().__init__(all_sprites)
         self.image = pg.image.load('images/Doodler.png')
         self.rect = self.image.get_rect()
-
+        self.falling = 0
         self.rect.x = x
         self.rect.y = y
         self.jump_power = -15
 
-    def update(self, platforms, monsters_group, game_over):
+    def update(self, platforms, monsters_group):
         self.rect.y += self.jump_power
         self.jump_power += GRAVITY
         for monster in monsters_group:
             if self.rect.colliderect(monster):
-                if self.jump_power > 0 and monster.rect.y - self.rect.y >= 69:
+                if self.jump_power >= 0:
                     self.rect.bottom = monster.rect.top
                     self.jump_power = -15
                     monsters_group.remove(monster)
                 else:
-                    game_over = True
+                    self.falling = True
+                    self.jump_power = 15
                     monsters_group.remove(monster)
-                    return
-        for platform in platforms:
-            if self.rect.colliderect(platform) and self.jump_power > 0 and platform.rect.y - self.rect.y >= 69:
-                self.rect.bottom = platform.rect.top
-                self.jump_power = -15
-                if platform.__class__ == BreakingPlatform:
-                    platform.crash = True
-                elif platform.__class__ == TeleportingPlatform:
-                    platform.teleport()
+        if not self.falling:
+            for platform in platforms:
+                if self.rect.colliderect(platform) and self.jump_power > 0 and platform.rect.y - self.rect.y >= 69:
+                    self.rect.bottom = platform.rect.top
+                    self.jump_power = -15
+                    if platform.__class__ == BreakingPlatform:
+                        platform.crash = True
+                    elif platform.__class__ == TeleportingPlatform:
+                        platform.teleport()
 
     def move(self, keys):
         if keys[pg.K_RIGHT]:

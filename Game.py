@@ -73,7 +73,7 @@ def play(screen, level):
                 return
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and game_over:
                 restart(doodler, platforms)
-                score = max_doodler_y = game_over = monsters = 0
+                score = max_doodler_y = game_over = monsters = doodler.falling = 0
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and finish:
                 available_levels.append(level + 1)
                 level = start_screen(screen)
@@ -83,19 +83,21 @@ def play(screen, level):
                 finish_score = level_config["finish_score"]
                 all_sprites = pg.sprite.Group()
                 platforms = pg.sprite.Group()
+                monsters_group = pg.sprite.Group()
                 doodler = Doodler(WIDTH // 2 - 50, HEIGHT - 115, all_sprites)
                 create_platforms(platforms, all_sprites, platforms_config)
-                score = max_doodler_y = game_over = finish = monsters = 0
+                score = max_doodler_y = game_over = finish = monsters = doodler.falling = 0
 
         platforms.draw(screen)
         platforms.update()
 
         doodler.move(pg.key.get_pressed())
-        doodler.update(platforms, monsters_group, game_over)
+        doodler.update(platforms, monsters_group)
         doodler.render(screen)
         monsters_group.draw(screen)
         for monster in monsters_group:
             monster.move()
+            monster.change_frame()
 
         # Camera
         if doodler.jump_power < 0 and doodler.rect.y < HEIGHT // 3:
@@ -114,7 +116,7 @@ def play(screen, level):
         screen.blit(score_label, (10, 10))
 
         if monsters < score // 1000:
-            monster = Monster(all_sprites)
+            monster = Monster(pg.image.load("images/monster-sheet.png"), 4, 1, all_sprites)
             monsters_group.add(monster)
             all_sprites.add(monster)
             monsters += 1
