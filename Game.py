@@ -2,6 +2,7 @@ from Doodler import Doodler
 from Platforms import *
 from MenuScreens import start_screen
 from Monster import *
+from Sound import *
 
 
 def game_over_message(surface, doodler_score):
@@ -49,6 +50,7 @@ def restart(doodler, platforms: pg.sprite.Group):
         platform.restart()
     platforms.sprites()[0].rect.x = 255
     platforms.sprites()[0].rect.y = 985
+    pygame.mixer.music.play(-1)
 
 
 def play(screen, level):
@@ -61,8 +63,9 @@ def play(screen, level):
     monsters_group = pg.sprite.Group()
     doodler = Doodler(WIDTH // 2 - 50, HEIGHT - 115, all_sprites)
     create_platforms(platforms, all_sprites, platforms_config)
-    score = max_doodler_y = game_over = finish = monsters = 0
+    score = max_doodler_y = game_over = finish = falling = monsters = 0
     clock = pg.time.Clock()
+    pygame.mixer.music.play(-1)
 
     # Main loop
     while True:
@@ -73,7 +76,8 @@ def play(screen, level):
                 return
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and game_over:
                 restart(doodler, platforms)
-                score = max_doodler_y = game_over = monsters = doodler.falling = 0
+                score = max_doodler_y = game_over = falling = monsters = doodler.falling = 0
+                pygame.mixer.music.play(-1)
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and finish:
                 available_levels.append(level + 1)
                 level = start_screen(screen)
@@ -87,6 +91,7 @@ def play(screen, level):
                 doodler = Doodler(WIDTH // 2 - 50, HEIGHT - 115, all_sprites)
                 create_platforms(platforms, all_sprites, platforms_config)
                 score = max_doodler_y = game_over = finish = monsters = doodler.falling = 0
+                pygame.mixer.music.play(-1)
 
         platforms.draw(screen)
         platforms.update()
@@ -127,12 +132,16 @@ def play(screen, level):
 
         if doodler.rect.y > HEIGHT:
             game_over = True
+            falling += 1
 
         if game_over:
             game_over_message(screen, score)
+            falling_sound_play(falling)
+            pygame.mixer.music.stop()
 
         if finish:
             finish_message(screen, level)
+            pygame.mixer.music.stop()
 
         pg.display.update()
         clock.tick(FPS)

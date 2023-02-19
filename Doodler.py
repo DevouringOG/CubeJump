@@ -1,4 +1,5 @@
 from Platforms import *
+from Sound import *
 
 
 class Doodler(pg.sprite.Sprite):
@@ -26,14 +27,16 @@ class Doodler(pg.sprite.Sprite):
                     self.jump_power = 15
                     monsters_group.remove(monster)
         if not self.falling:
-            for platform in platforms:
-                if self.rect.colliderect(platform) and self.jump_power > 0 and platform.rect.y - self.rect.y >= 69:
-                    self.rect.bottom = platform.rect.top
-                    self.jump_power = -15
-                    if platform.__class__ == BreakingPlatform:
-                        platform.crash = True
-                    elif platform.__class__ == TeleportingPlatform:
-                        platform.teleport()
+          for platform in platforms:
+              if self.rect.colliderect(platform) and self.jump_power > 0 and platform.rect.y - self.rect.y >= 69:
+                  jump_sound.play()
+                  self.rect.bottom = platform.rect.top
+                  self.jump_power = -15
+                  if platform.__class__ == BreakingPlatform:
+                      breaking_platform_sound.play()
+                      platform.crash = True
+                  elif platform.__class__ == TeleportingPlatform:
+                      platform.teleport()
 
     def move(self, keys):
         if keys[pg.K_RIGHT]:
