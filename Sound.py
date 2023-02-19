@@ -2,9 +2,10 @@ import pygame
 from Config import volume
 
 pygame.mixer.pre_init(44100, -16, 1, 512)
-pygame.mixer.music.load("Sound/Cipher2.mp3")  # Background music
+pygame.mixer.music.load("Sound/Cipher2.mp3")  # Фоновая музыка
+pygame.mixer.music.set_volume(VOL + 0.1)
 
-# SFX
+# Звуковые эффекты
 jump_sound = pygame.mixer.Sound("Sound/jump.wav")
 breaking_platform_sound = pygame.mixer.Sound("Sound/break_platform.ogg")
 falling_sound = pygame.mixer.Sound("Sound/falling.ogg")
