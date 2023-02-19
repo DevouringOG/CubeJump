@@ -17,7 +17,7 @@ class Doodler(pg.sprite.Sprite):
         self.jump_power += GRAVITY
         for monster in monsters_group:
             if self.rect.colliderect(monster):
-                if self.jump_power >= 0:
+                if self.jump_power >= 0 and monster.rect.y - self.rect.y >= 54:
                     self.rect.bottom = monster.rect.top
                     self.jump_power = -15
                     monsters_group.remove(monster)
