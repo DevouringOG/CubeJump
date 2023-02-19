@@ -19,24 +19,28 @@ class Doodler(pg.sprite.Sprite):
         for monster in monsters_group:
             if self.rect.colliderect(monster):
                 if self.jump_power >= 0 and monster.rect.y - self.rect.y >= 54:
+                    monster_sound.stop()
+                    monster_jump_sound.play()
                     self.rect.bottom = monster.rect.top
                     self.jump_power = -15
                     monsters_group.remove(monster)
                 else:
+                    monster_sound.stop()
+                    monster_crash_sound.play()
                     self.falling = True
                     self.jump_power = 15
                     monsters_group.remove(monster)
         if not self.falling:
-          for platform in platforms:
-              if self.rect.colliderect(platform) and self.jump_power > 0 and platform.rect.y - self.rect.y >= 69:
-                  jump_sound.play()
-                  self.rect.bottom = platform.rect.top
-                  self.jump_power = -15
-                  if platform.__class__ == BreakingPlatform:
-                      breaking_platform_sound.play()
-                      platform.crash = True
-                  elif platform.__class__ == TeleportingPlatform:
-                      platform.teleport()
+            for platform in platforms:
+                if self.rect.colliderect(platform) and self.jump_power > 0 and platform.rect.y - self.rect.y >= 69:
+                    jump_sound.play()
+                    self.rect.bottom = platform.rect.top
+                    self.jump_power = -15
+                if platform.__class__ == BreakingPlatform:
+                    breaking_platform_sound.play()
+                    platform.crash = True
+                elif platform.__class__ == TeleportingPlatform:
+                    platform.teleport()
 
     def move(self, keys):
         if keys[pg.K_RIGHT]:

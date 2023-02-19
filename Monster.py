@@ -1,5 +1,5 @@
 from Config import *
-import random
+from Sound import *
 
 
 class Monster(pg.sprite.Sprite):
@@ -21,6 +21,9 @@ class Monster(pg.sprite.Sprite):
             self.velocity *= -1
         elif self.rect.x <= 10:
             self.velocity *= -1
+        if self.alive():
+            monster_sound.play()
+
 
     def cut_sheet(self, sheet, columns, rows):
         self.rect = pg.Rect(0, 0, sheet.get_width() // columns,
