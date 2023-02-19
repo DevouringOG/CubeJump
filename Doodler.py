@@ -6,6 +6,8 @@ class Doodler(pg.sprite.Sprite):
     def __init__(self, x, y, all_sprites):
         super().__init__(all_sprites)
         self.image = pg.image.load('images/Doodler.png')
+        self.left_image = self.image
+        self.right_image = self.image = pg.transform.flip(self.image, True, False)
         self.rect = self.image.get_rect()
 
         self.rect.x = x
@@ -27,8 +29,10 @@ class Doodler(pg.sprite.Sprite):
     def move(self, keys):
         if keys[pg.K_RIGHT]:
             self.rect.x = (self.rect.x + 10 + WIDTH) % WIDTH
+            self.image = self.right_image
         if keys[pg.K_LEFT]:
             self.rect.x = (self.rect.x - 10 + WIDTH) % WIDTH
+            self.image = self.left_image
 
     def render(self, surface):
         surface.blit(self.image, self.rect)
