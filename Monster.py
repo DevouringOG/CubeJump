@@ -2,7 +2,7 @@ from Config import *
 import random
 
 
-class Monster(pg.sprite.Sprite):
+class Monster(pg.sprite.Sprite):  # Спрайт-класс монстра, родитель для красного и чёрного монстров
     def __init__(self, sheet, columns, rows, all_sprites):
         super().__init__(all_sprites)
         self.frames = []
@@ -30,7 +30,7 @@ class Monster(pg.sprite.Sprite):
             self.frames_fps = 0
 
 
-class BlackMonster(Monster):
+class BlackMonster(Monster):  # Монстр, двигающийся вдоль оси X
     def __init__(self, sheet, columns, rows, all_sprites):
         super(BlackMonster, self).__init__(sheet, columns, rows, all_sprites)
 
@@ -43,7 +43,7 @@ class BlackMonster(Monster):
             self.velocity *= -1
 
 
-class RedMonster(Monster):
+class RedMonster(Monster):  # Монстр, двигающийся вдоль оси Y
     def __init__(self, sheet, columns, rows, all_sprites):
         super(RedMonster, self).__init__(sheet, columns, rows, all_sprites)
 

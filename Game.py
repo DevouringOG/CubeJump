@@ -1,5 +1,4 @@
 import random
-
 from Doodler import Doodler
 from Platforms import *
 from MenuScreens import start_screen
