@@ -1,5 +1,5 @@
 from Config import *
-import random
+from Sound import *
 
 
 class Monster(pg.sprite.Sprite):  # Спрайт-класс монстра, родитель для красного и чёрного монстров
@@ -13,7 +13,7 @@ class Monster(pg.sprite.Sprite):  # Спрайт-класс монстра, ро
         self.rect.x, self.rect.y = WIDTH // 2 + self.rect.x, 10
         self.velocity = 10
         self.frames_fps = 0
-
+        
     def cut_sheet(self, sheet, columns, rows):
         self.rect = pg.Rect(0, 0, sheet.get_width() // columns,
                                 sheet.get_height() // rows)
