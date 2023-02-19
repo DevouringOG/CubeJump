@@ -1,6 +1,7 @@
 from Doodler import Doodler
 from Platforms import *
 from MenuScreens import start_screen
+from Monster import *
 from Sound import *
 
 
@@ -59,9 +60,10 @@ def play(screen, level):
     finish_score = level_config["finish_score"]
     all_sprites = pg.sprite.Group()
     platforms = pg.sprite.Group()
+    monsters_group = pg.sprite.Group()
     doodler = Doodler(WIDTH // 2 - 50, HEIGHT - 115, all_sprites)
     create_platforms(platforms, all_sprites, platforms_config)
-    score = max_doodler_y = game_over = finish = falling = 0
+    score = max_doodler_y = game_over = finish = falling = monsters = 0
     clock = pg.time.Clock()
     pygame.mixer.music.play(-1)
 
@@ -74,7 +76,7 @@ def play(screen, level):
                 return
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and game_over:
                 restart(doodler, platforms)
-                score = max_doodler_y = game_over = falling = 0
+                score = max_doodler_y = game_over = falling = monsters = doodler.falling = 0
                 pygame.mixer.music.play(-1)
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and finish:
                 available_levels.append(level + 1)
@@ -85,17 +87,22 @@ def play(screen, level):
                 finish_score = level_config["finish_score"]
                 all_sprites = pg.sprite.Group()
                 platforms = pg.sprite.Group()
+                monsters_group = pg.sprite.Group()
                 doodler = Doodler(WIDTH // 2 - 50, HEIGHT - 115, all_sprites)
                 create_platforms(platforms, all_sprites, platforms_config)
-                score = max_doodler_y = game_over = finish = 0
+                score = max_doodler_y = game_over = finish = monsters = doodler.falling = 0
                 pygame.mixer.music.play(-1)
 
         platforms.draw(screen)
         platforms.update()
 
         doodler.move(pg.key.get_pressed())
-        doodler.update(platforms)
+        doodler.update(platforms, monsters_group)
         doodler.render(screen)
+        monsters_group.draw(screen)
+        for monster in monsters_group:
+            monster.move()
+            monster.change_frame()
 
         # Camera
         if doodler.jump_power < 0 and doodler.rect.y < HEIGHT // 3:
@@ -112,6 +119,12 @@ def play(screen, level):
         # Show score
         score_label = font.render(f"Score: {score}/{finish_score}", True, 'black')
         screen.blit(score_label, (10, 10))
+
+        if monsters < score // 1000:
+            monster = Monster(pg.image.load("images/monster-sheet.png"), 4, 1, all_sprites)
+            monsters_group.add(monster)
+            all_sprites.add(monster)
+            monsters += 1
 
         # Game over check
         if score >= finish_score:
