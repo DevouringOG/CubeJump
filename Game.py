@@ -77,6 +77,7 @@ def play(screen, level):
                 return
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and game_over:
                 restart(doodler, platforms)
+                monsters_group = pg.sprite.Group()
                 score = max_doodler_y = game_over = falling = monsters = doodler.falling = 0
                 pygame.mixer.music.play(-1)
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and finish:
