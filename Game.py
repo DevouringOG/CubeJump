@@ -1,3 +1,4 @@
+import csv
 import random
 from Doodler import Doodler
 from Platforms import *
@@ -6,25 +7,14 @@ from Monster import *
 from Sound import *
 
 
-def game_over_message(surface, doodler_score):
-    game_over_text1 = game_over_font.render(f'GAME OVER', True, 'black')
-    score_text2 = font.render(f'YOUR SCORE: {doodler_score}', True, 'black')
-    press_space_text3 = restart_font.render(f'Press space to restart', True, 'black')
-    pg.draw.rect(surface, (171, 194, 112), (0, 350, WIDTH, 240))
-    surface.blit(game_over_text1, ((WIDTH - game_over_text1.get_width()) // 2, 400))
-    surface.blit(score_text2, ((WIDTH - score_text2.get_width()) // 2, 500))
-    surface.blit(press_space_text3, ((WIDTH - press_space_text3.get_width()) // 2, 950))
-
-
-def finish_message(surface, level):
-    game_over_text1 = game_over_font.render(f'FINISH!', True, 'black')
-    score_text2 = font.render(f'You unlock next level!' if not level + 1 in available_levels
-                              else "You finish this level again!", True, 'black')
-    press_space_text3 = restart_font.render(f'Press space to menu', True, 'black')
-    pg.draw.rect(surface, (171, 194, 112), (0, 350, WIDTH, 240))
-    surface.blit(game_over_text1, ((WIDTH - game_over_text1.get_width()) // 2, 400))
-    surface.blit(score_text2, ((WIDTH - score_text2.get_width()) // 2, 500))
-    surface.blit(press_space_text3, ((WIDTH - press_space_text3.get_width()) // 2, 950))
+def message(surface, text, color):
+    text1 = game_over_font.render(text[0], True, 'black')
+    text2 = font.render(text[1], True, 'black')
+    text3 = restart_font.render(text[2], True, 'black')
+    pg.draw.rect(surface, color, (0, 350, WIDTH, 240))
+    surface.blit(text1, ((WIDTH - text1.get_width()) // 2, 400))
+    surface.blit(text2, ((WIDTH - text2.get_width()) // 2, 500))
+    surface.blit(text3, ((WIDTH - text3.get_width()) // 2, 950))
 
 
 def create_platforms(platform_group, sprites_group, platforms_config):
@@ -54,47 +44,74 @@ def restart(doodler, platforms: pg.sprite.Group):
     pygame.mixer.music.play(-1)
 
 
+def update_record(level, score):
+    with open('records.csv', 'r') as records_file:
+        reader = csv.DictReader(records_file, delimiter=';')
+        s = [i for i in reader]
+    if int(s[level - 1]['record']) < score:
+        s[level - 1]['record'] = score
+    with open('records.csv', 'w', newline='', encoding="utf8") as f:
+        writer = csv.DictWriter(
+            f, fieldnames=list(s[0].keys()),
+            delimiter=';', quoting=csv.QUOTE_NONNUMERIC)
+        writer.writeheader()
+        for d in s:
+            writer.writerow(d)
+
+
 def play(screen, level):
     level_config = levels_config[level]
-    background_color = level_config["background"]
+    background = pg.image.load(f"images/level{level}_background.png")
     platforms_config = level_config["platforms"]
     finish_score = level_config["finish_score"]
+    message_color = level_config["message_color"]
     all_sprites = pg.sprite.Group()
     platforms = pg.sprite.Group()
+    doodler = Doodler((WIDTH - 70) // 2, HEIGHT - 70 - 15, all_sprites)
     monsters_group = pg.sprite.Group()
-    doodler = Doodler(WIDTH // 2 - 50, HEIGHT - 115, all_sprites)
     create_platforms(platforms, all_sprites, platforms_config)
     score = max_doodler_y = game_over = finish = falling = monsters = 0
     clock = pg.time.Clock()
+    pause = False
     pygame.mixer.music.play(-1)
 
     # Main loop
     while True:
-        screen.fill(background_color)
+        screen.blit(background, (0, 0))
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
+            if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                pause = not pause
+                if pause:
+                    break
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and game_over:
                 restart(doodler, platforms)
                 monsters_group = pg.sprite.Group()
                 score = max_doodler_y = game_over = falling = monsters = doodler.falling = 0
                 pygame.mixer.music.play(-1)
+                
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and finish:
                 available_levels.append(level + 1)
-                level = start_screen(screen)
+                level = start_screen(screen, True)
                 level_config = levels_config[level]
-                background_color = level_config["background"]
+                background = pg.image.load(f"images/level{level}_background.png")
                 platforms_config = level_config["platforms"]
                 finish_score = level_config["finish_score"]
+                message_color = level_config["message_color"]
                 all_sprites = pg.sprite.Group()
                 platforms = pg.sprite.Group()
                 monsters_group = pg.sprite.Group()
-                doodler = Doodler(WIDTH // 2 - 50, HEIGHT - 115, all_sprites)
+                doodler = Doodler((WIDTH - 70) // 2, HEIGHT - 70 - 15, all_sprites)
                 create_platforms(platforms, all_sprites, platforms_config)
                 score = max_doodler_y = game_over = finish = monsters = doodler.falling = 0
                 pygame.mixer.music.play(-1)
+                pause = False
 
+        if pause:
+            continue
+            
         platforms.draw(screen)
         platforms.update()
 
@@ -119,7 +136,8 @@ def play(screen, level):
             max_doodler_y = HEIGHT - doodler.rect.y
 
         # Show score
-        score_label = font.render(f"Score: {score}/{finish_score}", True, 'black')
+        score_label = font.render(f"Score: {score}/{finish_score}" if finish_score != float("inf")
+                                  else f"Score: {score}", True, 'black')
         screen.blit(score_label, (10, 10))
 
         if monsters < score // 1000:
@@ -134,18 +152,16 @@ def play(screen, level):
         # Game over check
         if score >= finish_score:
             finish = True
+            update_record(level, finish_score)
+            message(screen, ["FINISH!", "You unlock next level!" if not level + 1 in available_levels
+                    else "You finish this level again!", "Press space to menu"], message_color)
+            pygame.mixer.music.stop()
 
         if doodler.rect.y > HEIGHT:
             game_over = True
+            update_record(level, score)
+            message(screen, ["GAME OVER", f"YOUR SCORE: {score}", "Press space to restart"], message_color)
             falling += 1
-
-        if game_over:
-            game_over_message(screen, score)
-            falling_sound_play(falling)
-            pygame.mixer.music.stop()
-
-        if finish:
-            finish_message(screen, level)
             pygame.mixer.music.stop()
 
         pg.display.update()

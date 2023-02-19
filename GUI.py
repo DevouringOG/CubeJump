@@ -95,3 +95,38 @@ class SpinBox(pg.sprite.Sprite):
         self.value_text = game_over_font.render(str(self.value), True, "black")
         self.surface.blit(self.spin_box_image, (self.pos[0] + self.rect.width + self.rect.width // 4, self.pos[1]))
         self.surface.blit(self.value_text, (self.pos[0] + self.rect.width * 1.8, self.pos[1] + self.rect.height * 0.4))
+
+
+class Switcher(pg.sprite.Sprite):
+
+    def __init__(self, surface, position: tuple, ON_EVENT, OFF_EVENT, gui_sprites):
+        super().__init__(gui_sprites)
+
+        self.surface = surface
+        self.position = position
+        self.on_event = ON_EVENT
+        self.off_event = OFF_EVENT
+        self.switcher_position = (position[0] + 5, position[1] + 5)
+        self.off = True
+
+        self.image = pg.image.load("images/switcher2.png")
+        self.rect = self.image.get_rect()
+        self.rect.x = self.switcher_position[0]
+        self.rect.y = self.switcher_position[1]
+
+        self.switcher_image = pg.image.load("images/switcher.png")
+        surface.blit(self.switcher_image, self.position)
+
+    def update(self, mouse_pos: tuple, mouse_click: bool):
+        if self.rect.collidepoint(*mouse_pos):
+            if mouse_click:
+                if self.off:
+                    pg.event.post(self.on_event)
+                    self.surface.blit(self.switcher_image, self.position)
+                    self.rect.x += self.image.get_width()
+                    self.off = not self.off
+                else:
+                    pg.event.post(self.off_event)
+                    self.surface.blit(self.switcher_image, self.position)
+                    self.rect.x -= self.image.get_width()
+                    self.off = not self.off

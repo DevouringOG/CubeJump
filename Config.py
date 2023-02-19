@@ -19,7 +19,17 @@ BACK_BUTTON_EVENT = pg.event.Event(pg.USEREVENT + 6)
 ABOUT_BUTTON_EVENT = pg.event.Event(pg.USEREVENT + 7)
 UP_SOUND_VALUE_EVENT = pg.event.Event(pg.USEREVENT + 8)
 DOWN_SOUND_VALUE_EVENT = pg.event.Event(pg.USEREVENT + 9)
-levels_config = {1: {"background": (153, 229, 80), "platforms": (9, 0, 0, 0), "finish_score": 1500},
-                 2: {"background": (223, 113, 38), "platforms": (6, 3, 0, 0), "finish_score": 3000},
-                 3: {"background": (91, 110, 225), "platforms": (3, 3, 3, 0), "finish_score": 5000}}
-available_levels = [1, 2, 3]
+OFF_EVENT = pg.event.Event(pg.USEREVENT + 10)
+ON_EVENT = pg.event.Event(pg.USEREVENT + 11)
+FREE_LEVEL_BUTTON_EVENT = pg.event.Event(pg.USEREVENT + 12)
+RECORDS_BUTTON_EVENT = pg.event.Event(pg.USEREVENT + 13)
+
+levels_config = {1: {"message_color": (81, 73, 128), "platforms": (9, 0, 0, 0),
+                     "finish_score": 1000},
+                 2: {"message_color": (94, 51, 150), "platforms": (6, 3, 0, 0),
+                     "finish_score": 3000},
+                 3: {"message_color": (2, 69, 117), "platforms": (3, 3, 3, 0),
+                     "finish_score": 5000},
+                 4: {"message_color": (94, 51, 150), "platforms": (3, 3, 3, 0),
+                     "finish_score": float("inf")}}
+available_levels = [1]
