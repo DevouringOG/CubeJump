@@ -1,3 +1,4 @@
+import random
 from Doodler import Doodler
 from Platforms import *
 from MenuScreens import start_screen
@@ -76,6 +77,7 @@ def play(screen, level):
                 return
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and game_over:
                 restart(doodler, platforms)
+                monsters_group = pg.sprite.Group()
                 score = max_doodler_y = game_over = falling = monsters = doodler.falling = 0
                 pygame.mixer.music.play(-1)
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and finish:
@@ -121,7 +123,10 @@ def play(screen, level):
         screen.blit(score_label, (10, 10))
 
         if monsters < score // 1000:
-            monster = Monster(pg.image.load("images/monster-sheet.png"), 4, 1, all_sprites)
+            if random.randint(0, 2):
+                monster = BlackMonster(pg.image.load("images/monster-sheet.png"), 4, 1, all_sprites)
+            else:
+                monster = RedMonster(pg.image.load("images/monster_sheet2.png"), 4, 1, all_sprites)
             monsters_group.add(monster)
             all_sprites.add(monster)
             monsters += 1
