@@ -68,6 +68,7 @@ def play(screen, level):
     create_platforms(platforms, all_sprites, platforms_config)
     score = max_doodler_y = game_over = finish = 0
     clock = pg.time.Clock()
+    pause = False
 
     # Main loop
     while True:
@@ -76,12 +77,16 @@ def play(screen, level):
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
+            if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
+                pause = not pause
+                if pause:
+                    break
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and game_over:
                 restart(doodler, platforms)
                 score = max_doodler_y = finish = game_over = 0
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and finish:
                 available_levels.append(level + 1)
-                level = start_screen(screen)
+                level = start_screen(screen, True)
                 level_config = levels_config[level]
                 background = pg.image.load(f"images/level{level}_background.png")
                 platforms_config = level_config["platforms"]
@@ -92,6 +97,10 @@ def play(screen, level):
                 doodler = Doodler((WIDTH - 70) // 2, HEIGHT - 70 - 15, all_sprites)
                 create_platforms(platforms, all_sprites, platforms_config)
                 score = max_doodler_y = game_over = finish = 0
+                pause = False
+
+        if pause:
+            continue
 
         platforms.draw(screen)
         platforms.update()

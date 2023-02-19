@@ -2,7 +2,11 @@ from GUI import *
 import csv
 
 
-def start_screen(surface):
+def start_screen(surface, levels_screen=False):
+    if levels_screen:
+        level = levels_menu(surface)
+        if level:
+            return level
     background = pg.image.load("images/menu_background.png")
     surface.blit(background, (0, 0))
 
