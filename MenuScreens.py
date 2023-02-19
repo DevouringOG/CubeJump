@@ -1,4 +1,5 @@
 from GUI import *
+import csv
 
 
 def start_screen(surface):
@@ -12,10 +13,9 @@ def start_screen(surface):
     Button(((WIDTH - 300) // 2, 450), "start", START_BUTTON_EVENT, gui_sprites)
     Button(((WIDTH - 300) // 2, 550), "settings", SETTING_BUTTON_EVENT, gui_sprites)
     Button(((WIDTH - 300) // 2, 650), "about", ABOUT_BUTTON_EVENT, gui_sprites)
+    Button(((WIDTH - 300) // 2, 750), "records", RECORDS_BUTTON_EVENT, gui_sprites)
 
     while True:
-        surface.blit(background, (0, 0))
-        surface.blit(logo, ((WIDTH - logo.get_width()) // 2, 200))
         mouse_click = False
 
         for event in pg.event.get():
@@ -23,7 +23,7 @@ def start_screen(surface):
                 pg.quit()
             if event.type == pg.MOUSEBUTTONUP:
                 mouse_click = True
-                print(1)
+
             if event.type == START_BUTTON_EVENT.type:
                 level = levels_menu(surface)
                 if level:
@@ -34,6 +34,11 @@ def start_screen(surface):
                 surface.blit(logo, ((WIDTH - logo.get_width()) // 2, 200))
             if event.type == ABOUT_BUTTON_EVENT.type:
                 about(surface)
+            if event.type == RECORDS_BUTTON_EVENT.type:
+                records(surface)
+
+        surface.blit(background, (0, 0))
+        surface.blit(logo, ((WIDTH - logo.get_width()) // 2, 200))
         gui_sprites.update(pg.mouse.get_pos(), mouse_click)
         gui_sprites.draw(surface)
         pg.display.update()
@@ -141,6 +146,43 @@ def about(surface):
                   (about_font.render("(left, right)", True, "black"), (80, 650)),
                   (font.render("ABOUT", True, "black"), (232, 445))]
     for i in about_text:
+        surface.blit(i[0], (i[1][0], i[1][1]))
+
+    while True:
+        mouse_click = False
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                pg.quit()
+            if event.type == pg.MOUSEBUTTONUP:
+                mouse_click = True
+            if event.type == BACK_BUTTON_EVENT.type:
+                return
+
+        gui_sprites.update(pg.mouse.get_pos(), mouse_click)
+        gui_sprites.draw(surface)
+        pg.display.update()
+
+
+def records(surface):
+    background = pg.image.load("images/about.png")
+    surface.blit(background, (50, 400))
+
+    gui_sprites = pg.sprite.Group()
+    Button((55, 405), "", BACK_BUTTON_EVENT, gui_sprites, base_image_filename="about_back_button.png",
+           hover_image_filename="hover_about_back_button.png")
+
+    with open('records.csv', 'r') as f:
+        data = csv.DictReader(f, delimiter=';')
+        s = [i for i in data]
+
+    text = [(about_font.render(f"LEVEL 1: {s[0]['record']}", True, "black"), (80, 500)),
+            (about_font.render(f"LEVEL 2: {s[1]['record']}", True, "black"), (80, 540)),
+            (about_font.render(f"LEVEL 3: {s[2]['record']}", True, "black"), (80, 580)),
+            (about_font.render(f"FREE MODE: {s[3]['record']}", True, "black"), (80, 620)),
+            (font.render("RECORDS", True, "black"), ((WIDTH - 189) // 2, 445))]
+
+    for i in text:
         surface.blit(i[0], (i[1][0], i[1][1]))
 
     while True:

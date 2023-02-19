@@ -1,3 +1,5 @@
+import csv
+
 from Doodler import Doodler
 from Platforms import *
 from MenuScreens import start_screen
@@ -48,6 +50,21 @@ def restart(doodler, platforms: pg.sprite.Group):
         platform.restart()
     platforms.sprites()[0].rect.x = 255
     platforms.sprites()[0].rect.y = 985
+
+
+def update_record(level, score):
+    with open('records.csv', 'r') as records_file:
+        reader = csv.DictReader(records_file, delimiter=';')
+        s = [i for i in reader]
+    if int(s[level - 1]['record']) < score:
+        s[level - 1]['record'] = score
+    with open('records.csv', 'w', newline='', encoding="utf8") as f:
+        writer = csv.DictWriter(
+            f, fieldnames=list(s[0].keys()),
+            delimiter=';', quoting=csv.QUOTE_NONNUMERIC)
+        writer.writeheader()
+        for d in s:
+            writer.writerow(d)
 
 
 def play(screen, level):
@@ -119,9 +136,11 @@ def play(screen, level):
             game_over = True
 
         if game_over:
+            update_record(level, score)
             game_over_message(screen, score)
 
         if finish:
+            update_record(level, finish_score)
             finish_message(screen, level, message_color)
 
         pg.display.update()
