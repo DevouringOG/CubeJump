@@ -10,7 +10,7 @@ def terminate():
 pg.init()
 pg.display.set_caption("Doodle jump")
 
-# Импортируется сдесь, так как в этих модулях действия могут происходить только после инициализации
+# Импортируется здесь, так как в этих модулях действия могут происходить только после инициализации
 import Game
 from Config import *
 from MenuScreens import *

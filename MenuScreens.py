@@ -1,5 +1,6 @@
 from GUI import *
 import csv
+from Sound import *
 
 
 def start_screen(surface, levels_screen=False):
@@ -29,14 +30,17 @@ def start_screen(surface, levels_screen=False):
                 mouse_click = True
 
             if event.type == START_BUTTON_EVENT.type:
+                button_sound.play()
                 level = levels_menu(surface)
                 if level:
                     return level
             if event.type == SETTING_BUTTON_EVENT.type:
+                button_sound.play()
                 settings_menu(surface)
                 surface.blit(background, (0, 0))
                 surface.blit(logo, ((WIDTH - logo.get_width()) // 2, 200))
             if event.type == ABOUT_BUTTON_EVENT.type:
+                button_sound.play()
                 about(surface)
             if event.type == RECORDS_BUTTON_EVENT.type:
                 records(surface)
@@ -75,16 +79,20 @@ def levels_menu(surface):
             if event.type == pg.MOUSEBUTTONUP:
                 mouse_click = True
             if event.type == LEVEL1_BUTTON_EVENT.type:
+                button_sound.play()
                 return 1
             if event.type == LEVEL2_BUTTON_EVENT.type:
+                button_sound.play()
                 if 2 in available_levels:
                     return 2
             if event.type == LEVEL3_BUTTON_EVENT.type:
+                button_sound.play()
                 if 3 in available_levels:
                     return 3
             if event.type == FREE_LEVEL_BUTTON_EVENT.type:
                 return 4
             if event.type == BACK_BUTTON_EVENT.type:
+                button_sound.play()
                 return 0
 
         gui_sprites.update(pg.mouse.get_pos(), mouse_click)
@@ -93,6 +101,8 @@ def levels_menu(surface):
 
 
 def settings_menu(surface):
+    global volume
+
     background = pg.image.load("images/setting_background.png")
     surface.blit(background, (0, 0))
 
@@ -119,14 +129,21 @@ def settings_menu(surface):
             if event.type == pg.MOUSEBUTTONUP:
                 mouse_click = True
             if event.type == UP_SOUND_VALUE_EVENT.type:
+                volume += 0.1
+                set_volume(volume)
+                button_sound.play()
                 print("UP")
             if event.type == DOWN_SOUND_VALUE_EVENT.type:
+                volume -= 0.1
+                set_volume(volume)
+                button_sound.play()
                 print("DOWN")
             if event.type == OFF_EVENT.type:
                 print("OFF")
             if event.type == ON_EVENT.type:
                 print("ON")
             if event.type == BACK_BUTTON_EVENT.type:
+                button_sound.play()
                 return
 
         gui_sprites.update(pg.mouse.get_pos(), mouse_click)
@@ -198,6 +215,7 @@ def records(surface):
             if event.type == pg.MOUSEBUTTONUP:
                 mouse_click = True
             if event.type == BACK_BUTTON_EVENT.type:
+                button_sound.play()
                 return
 
         gui_sprites.update(pg.mouse.get_pos(), mouse_click)

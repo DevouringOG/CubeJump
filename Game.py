@@ -1,8 +1,10 @@
 import csv
-
+import random
 from Doodler import Doodler
 from Platforms import *
 from MenuScreens import start_screen
+from Monster import *
+from Sound import *
 
 
 def message(surface, text, color):
@@ -39,6 +41,7 @@ def restart(doodler, platforms: pg.sprite.Group):
         platform.restart()
     platforms.sprites()[0].rect.x = 255
     platforms.sprites()[0].rect.y = 985
+    pygame.mixer.music.play(-1)
 
 
 def update_record(level, score):
@@ -65,10 +68,12 @@ def play(screen, level):
     all_sprites = pg.sprite.Group()
     platforms = pg.sprite.Group()
     doodler = Doodler((WIDTH - 70) // 2, HEIGHT - 70 - 15, all_sprites)
+    monsters_group = pg.sprite.Group()
     create_platforms(platforms, all_sprites, platforms_config)
-    score = max_doodler_y = game_over = finish = 0
+    score = max_doodler_y = game_over = finish = falling = monsters = 0
     clock = pg.time.Clock()
     pause = False
+    pygame.mixer.music.play(-1)
 
     # Main loop
     while True:
@@ -83,7 +88,10 @@ def play(screen, level):
                     break
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and game_over:
                 restart(doodler, platforms)
-                score = max_doodler_y = finish = game_over = 0
+                monsters_group = pg.sprite.Group()
+                score = max_doodler_y = game_over = falling = monsters = doodler.falling = 0
+                pygame.mixer.music.play(-1)
+                
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and finish:
                 available_levels.append(level + 1)
                 level = start_screen(screen, True)
@@ -94,20 +102,26 @@ def play(screen, level):
                 message_color = level_config["message_color"]
                 all_sprites = pg.sprite.Group()
                 platforms = pg.sprite.Group()
+                monsters_group = pg.sprite.Group()
                 doodler = Doodler((WIDTH - 70) // 2, HEIGHT - 70 - 15, all_sprites)
                 create_platforms(platforms, all_sprites, platforms_config)
-                score = max_doodler_y = game_over = finish = 0
+                score = max_doodler_y = game_over = finish = monsters = doodler.falling = 0
+                pygame.mixer.music.play(-1)
                 pause = False
 
         if pause:
             continue
-
+            
         platforms.draw(screen)
         platforms.update()
 
         doodler.move(pg.key.get_pressed())
-        doodler.update(platforms)
+        doodler.update(platforms, monsters_group)
         doodler.render(screen)
+        monsters_group.draw(screen)
+        for monster in monsters_group:
+            monster.move()
+            monster.change_frame()
 
         # Camera
         if doodler.jump_power < 0 and doodler.rect.y < HEIGHT // 3:
@@ -126,17 +140,29 @@ def play(screen, level):
                                   else f"Score: {score}", True, 'black')
         screen.blit(score_label, (10, 10))
 
+        if monsters < score // 1000:
+            if random.randint(0, 2):
+                monster = BlackMonster(pg.image.load("images/monster-sheet.png"), 4, 1, all_sprites)
+            else:
+                monster = RedMonster(pg.image.load("images/monster_sheet2.png"), 4, 1, all_sprites)
+            monsters_group.add(monster)
+            all_sprites.add(monster)
+            monsters += 1
+
         # Game over check
         if score >= finish_score:
             finish = True
             update_record(level, finish_score)
             message(screen, ["FINISH!", "You unlock next level!" if not level + 1 in available_levels
                     else "You finish this level again!", "Press space to menu"], message_color)
+            pygame.mixer.music.stop()
 
         if doodler.rect.y > HEIGHT:
             game_over = True
             update_record(level, score)
             message(screen, ["GAME OVER", f"YOUR SCORE: {score}", "Press space to restart"], message_color)
+            falling += 1
+            pygame.mixer.music.stop()
 
         pg.display.update()
         clock.tick(FPS)
