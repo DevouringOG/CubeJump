@@ -16,7 +16,7 @@ class Doodler(pg.sprite.Sprite):
         self.rect.y += self.jump_power
         self.jump_power += GRAVITY
         for platform in platforms:
-            if self.rect.colliderect(platform) and self.jump_power > 0 and platform.rect.y - self.rect.y >= 69:
+            if self.rect.colliderect(platform) and self.jump_power > 0 and platform.rect.y - self.rect.y >= 39:
                 self.rect.bottom = platform.rect.top
                 self.jump_power = -15
                 if platform.__class__ == BreakingPlatform:
@@ -37,6 +37,6 @@ class Doodler(pg.sprite.Sprite):
         return self.rect.x, self.rect.y
 
     def restart(self):
-        self.rect.x = WIDTH // 2 - 50
-        self.rect.y = HEIGHT - 50
+        self.rect.x = (WIDTH - self.rect.width) // 2
+        self.rect.y = HEIGHT - self.rect.height - 15
         self.jump_power = -15

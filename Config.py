@@ -23,12 +23,12 @@ ON_EVENT = pg.event.Event(pg.USEREVENT + 11)
 FREE_LEVEL_BUTTON_EVENT = pg.event.Event(pg.USEREVENT + 12)
 RECORDS_BUTTON_EVENT = pg.event.Event(pg.USEREVENT + 13)
 
-levels_config = {1: {"background": (153, 229, 80), "message_color": (171, 194, 112), "platforms": (9, 0, 0, 0),
-                     "finish_score": 100},
-                 2: {"background": (223, 113, 38), "message_color": (181, 87, 27), "platforms": (6, 3, 0, 0),
-                     "finish_score": 1100},
-                 3: {"background": (255, 201, 60), "message_color": (206, 149, 0), "platforms": (3, 3, 3, 0),
-                     "finish_score": 1200},
-                 4: {"background": (11, 128, 210), "message_color": (45, 104, 146), "platforms": (3, 3, 3, 0),
+levels_config = {1: {"message_color": (81, 73, 128), "platforms": (9, 0, 0, 0),
+                     "finish_score": 1000},
+                 2: {"message_color": (94, 51, 150), "platforms": (6, 3, 0, 0),
+                     "finish_score": 110},
+                 3: {"message_color": (2, 69, 117), "platforms": (3, 3, 3, 0),
+                     "finish_score": 120},
+                 4: {"message_color": (94, 51, 150), "platforms": (3, 3, 3, 0),
                      "finish_score": float("inf")}}
-available_levels = [1]
+available_levels = [1, 2, 3]

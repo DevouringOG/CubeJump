@@ -5,25 +5,14 @@ from Platforms import *
 from MenuScreens import start_screen
 
 
-def game_over_message(surface, doodler_score):
-    game_over_text1 = game_over_font.render(f'GAME OVER', True, 'black')
-    score_text2 = font.render(f'YOUR SCORE: {doodler_score}', True, 'black')
-    press_space_text3 = restart_font.render(f'Press space to restart', True, 'black')
-    pg.draw.rect(surface, (171, 194, 112), (0, 350, WIDTH, 240))
-    surface.blit(game_over_text1, ((WIDTH - game_over_text1.get_width()) // 2, 400))
-    surface.blit(score_text2, ((WIDTH - score_text2.get_width()) // 2, 500))
-    surface.blit(press_space_text3, ((WIDTH - press_space_text3.get_width()) // 2, 950))
-
-
-def finish_message(surface, level, color):
-    game_over_text1 = game_over_font.render(f'FINISH!', True, 'black')
-    score_text2 = font.render(f'You unlock next level!' if not level + 1 in available_levels
-                              else "You finish this level again!", True, 'black')
-    press_space_text3 = restart_font.render(f'Press space to menu', True, 'black')
+def message(surface, text, color):
+    text1 = game_over_font.render(text[0], True, 'black')
+    text2 = font.render(text[1], True, 'black')
+    text3 = restart_font.render(text[2], True, 'black')
     pg.draw.rect(surface, color, (0, 350, WIDTH, 240))
-    surface.blit(game_over_text1, ((WIDTH - game_over_text1.get_width()) // 2, 400))
-    surface.blit(score_text2, ((WIDTH - score_text2.get_width()) // 2, 500))
-    surface.blit(press_space_text3, ((WIDTH - press_space_text3.get_width()) // 2, 950))
+    surface.blit(text1, ((WIDTH - text1.get_width()) // 2, 400))
+    surface.blit(text2, ((WIDTH - text2.get_width()) // 2, 500))
+    surface.blit(text3, ((WIDTH - text3.get_width()) // 2, 950))
 
 
 def create_platforms(platform_group, sprites_group, platforms_config):
@@ -69,20 +58,20 @@ def update_record(level, score):
 
 def play(screen, level):
     level_config = levels_config[level]
-    background_color = level_config["background"]
+    background = pg.image.load(f"images/level{level}_background.png")
     platforms_config = level_config["platforms"]
     finish_score = level_config["finish_score"]
     message_color = level_config["message_color"]
     all_sprites = pg.sprite.Group()
     platforms = pg.sprite.Group()
-    doodler = Doodler(WIDTH // 2 - 50, HEIGHT - 115, all_sprites)
+    doodler = Doodler((WIDTH - 70) // 2, HEIGHT - 70 - 15, all_sprites)
     create_platforms(platforms, all_sprites, platforms_config)
     score = max_doodler_y = game_over = finish = 0
     clock = pg.time.Clock()
 
     # Main loop
     while True:
-        screen.fill(background_color)
+        screen.blit(background, (0, 0))
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -94,13 +83,13 @@ def play(screen, level):
                 available_levels.append(level + 1)
                 level = start_screen(screen)
                 level_config = levels_config[level]
-                background_color = level_config["background"]
+                background = pg.image.load(f"images/level{level}_background.png")
                 platforms_config = level_config["platforms"]
                 finish_score = level_config["finish_score"]
                 message_color = level_config["message_color"]
                 all_sprites = pg.sprite.Group()
                 platforms = pg.sprite.Group()
-                doodler = Doodler(WIDTH // 2 - 50, HEIGHT - 115, all_sprites)
+                doodler = Doodler((WIDTH - 70) // 2, HEIGHT - 70 - 15, all_sprites)
                 create_platforms(platforms, all_sprites, platforms_config)
                 score = max_doodler_y = game_over = finish = 0
 
@@ -131,17 +120,14 @@ def play(screen, level):
         # Game over check
         if score >= finish_score:
             finish = True
+            update_record(level, finish_score)
+            message(screen, ["FINISH!", "You unlock next level!" if not level + 1 in available_levels
+                    else "You finish this level again!", "Press space to menu"], message_color)
 
         if doodler.rect.y > HEIGHT:
             game_over = True
-
-        if game_over:
             update_record(level, score)
-            game_over_message(screen, score)
-
-        if finish:
-            update_record(level, finish_score)
-            finish_message(screen, level, message_color)
+            message(screen, ["GAME OVER", f"YOUR SCORE: {score}", "Press space to restart"], message_color)
 
         pg.display.update()
         clock.tick(FPS)
