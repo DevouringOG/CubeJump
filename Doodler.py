@@ -10,7 +10,7 @@ class Doodler(pg.sprite.Sprite):
         self.left_image = self.image
         self.right_image = self.image = pg.transform.flip(self.image, True, False)
         self.rect = self.image.get_rect()
-        self.falling = 0
+        self.falling = False
         self.rect.x = x
         self.rect.y = y
         self.jump_power = -15

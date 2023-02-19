@@ -20,7 +20,6 @@ def message(surface, text, color):
 def create_platforms(platform_group, sprites_group, platforms_config):
     platform_group.add(Platform(255, 985, sprites_group))
     random.shuffle(platform_y_cords)
-    print(platform_y_cords)
     for i in range(0, platforms_config[0]):
         platform_group.add(Platform(random.randrange(0, WIDTH - 85),
                                     platform_y_cords[i], sprites_group))
@@ -73,11 +72,11 @@ def play(screen, level):
     score = max_doodler_y = game_over = finish = falling = monsters = 0
     clock = pg.time.Clock()
     pause = False
+    pause_effect = pg.image.load("images/pause_effect.png")
     pygame.mixer.music.play(-1)
 
     # Main loop
     while True:
-        screen.blit(background, (0, 0))
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
@@ -85,6 +84,9 @@ def play(screen, level):
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 pause = not pause
                 if pause:
+                    screen.blit(pause_effect, (0, 0))
+                    screen.blit(logo_font.render("PAUSE", True, "black"), ((WIDTH - 300) // 2, (HEIGHT - 119) // 2))
+                    pg.display.update()
                     break
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and game_over:
                 restart(doodler, platforms)
@@ -111,7 +113,9 @@ def play(screen, level):
 
         if pause:
             continue
-            
+
+        screen.blit(background, (0, 0))
+
         platforms.draw(screen)
         platforms.update()
 
@@ -142,7 +146,7 @@ def play(screen, level):
 
         if monsters < score // 1000:
             if random.randint(0, 2):
-                monster = BlackMonster(pg.image.load("images/monster-sheet.png"), 4, 1, all_sprites)
+                monster = BlackMonster(pg.image.load("images/monster-sheet.png"), 3, 1, all_sprites)
             else:
                 monster = RedMonster(pg.image.load("images/monster_sheet2.png"), 4, 1, all_sprites)
             monsters_group.add(monster)
