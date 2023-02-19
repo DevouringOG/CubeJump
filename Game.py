@@ -1,3 +1,5 @@
+import random
+
 from Doodler import Doodler
 from Platforms import *
 from MenuScreens import start_screen
@@ -121,7 +123,10 @@ def play(screen, level):
         screen.blit(score_label, (10, 10))
 
         if monsters < score // 1000:
-            monster = Monster(pg.image.load("images/monster-sheet.png"), 4, 1, all_sprites)
+            if random.randint(0, 2):
+                monster = BlackMonster(pg.image.load("images/monster-sheet.png"), 4, 1, all_sprites)
+            else:
+                monster = RedMonster(pg.image.load("images/monster_sheet2.png"), 4, 1, all_sprites)
             monsters_group.add(monster)
             all_sprites.add(monster)
             monsters += 1
