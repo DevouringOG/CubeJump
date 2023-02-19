@@ -11,12 +11,12 @@ class Monster(pg.sprite.Sprite):  # Спрайт-класс монстра, ро
         self.image = self.frames[self.cur_frame]
         self.rect = self.image.get_rect()
         self.rect.x, self.rect.y = WIDTH // 2 + self.rect.x, 10
-        self.velocity = 10
+        self.velocity = 5
         self.frames_fps = 0
-        
+
     def cut_sheet(self, sheet, columns, rows):
         self.rect = pg.Rect(0, 0, sheet.get_width() // columns,
-                                sheet.get_height() // rows)
+                            sheet.get_height() // rows)
         for j in range(rows):
             for i in range(columns):
                 frame_location = (self.rect.w * i, self.rect.h * j)
@@ -50,7 +50,3 @@ class RedMonster(Monster):  # Монстр, двигающийся вдоль о
     def move(self):
         self.frames_fps += 1
         self.rect.y += self.velocity
-        if self.rect.y >= HEIGHT - 100:
-            self.velocity *= -1
-        elif self.rect.y <= 10:
-            self.velocity *= -1

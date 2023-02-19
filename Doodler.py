@@ -34,7 +34,7 @@ class Doodler(pg.sprite.Sprite):
                     monsters_group.remove(monster)
         if not self.falling:
             for platform in platforms:
-                if self.rect.colliderect(platform) and self.jump_power > 0 and platform.rect.y - self.rect.y >= 69:
+                if self.rect.colliderect(platform) and self.jump_power > 0 and platform.rect.y - self.rect.y >= 39:
                     jump_sound.play()
                     self.rect.bottom = platform.rect.top
                     self.jump_power = -15

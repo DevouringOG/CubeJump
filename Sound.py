@@ -3,7 +3,7 @@ from Config import volume
 
 pygame.mixer.pre_init(44100, -16, 1, 512)
 pygame.mixer.music.load("Sound/Cipher2.mp3")  # Фоновая музыка
-pygame.mixer.music.set_volume(VOL + 0.1)
+pygame.mixer.music.set_volume(volume + 0.1)
 
 # Звуковые эффекты
 jump_sound = pygame.mixer.Sound("Sound/jump.wav")
