@@ -2,7 +2,6 @@ from Config import *
 from Sound import monster_sound
 
 
-
 class Monster(pg.sprite.Sprite):  # Спрайт-класс монстра, родитель для красного и чёрного монстров
     def __init__(self, sheet, columns, rows, all_sprites):
         super().__init__(all_sprites)
@@ -45,7 +44,6 @@ class BlackMonster(Monster):  # Монстр, двигающийся вдоль 
         if self.rect.y > HEIGHT:
             self.kill()
             monster_sound.stop()
-
 
 
 class RedMonster(Monster):  # Монстр, двигающийся вдоль оси Y
