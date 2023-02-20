@@ -1,7 +1,7 @@
 import pygame
 from Config import volume
 
-pygame.mixer.pre_init(44100, -16, 1, 512)
+
 pygame.mixer.music.load("Sound/Cipher2.mp3")  # Фоновая музыка
 pygame.mixer.music.set_volume(volume + 0.1)
 
@@ -18,10 +18,11 @@ SFX = [jump_sound, breaking_platform_sound, falling_sound, button_sound,
        monster_sound, monster_jump_sound, monster_crash_sound]
 
 
-def set_volume(volume):
-    for i in SFX:
-        i.set_volume(volume)
-    pygame.mixer.music.set_volume(volume)
+def set_volume(volume, volume_is_on):
+    if volume_is_on:
+        for i in SFX:
+            i.set_volume(volume)
+        pygame.mixer.music.set_volume(volume)
 
 
 def falling_sound_play(falling):
@@ -31,4 +32,12 @@ def falling_sound_play(falling):
         falling += 1
 
 
-set_volume(volume)
+def sound_switcher(volume_is_on):
+    if volume_is_on:
+        set_volume(0, volume_is_on)
+        return False
+    set_volume(volume, volume_is_on)
+    return True
+
+
+set_volume(volume, True)

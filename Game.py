@@ -30,9 +30,6 @@ def create_platforms(platform_group, sprites_group, platforms_config):
     for i in range(sum(platforms_config[:2]), sum(platforms_config[:3])):
         platform_group.add(BreakingPlatform(random.randrange(0, WIDTH - 85),
                                             platform_y_cords[i], sprites_group))
-    for i in range(sum(platforms_config[:3]), 9):
-        platform_group.add(TeleportingPlatform(random.randrange(0, WIDTH - 85),
-                                               platform_y_cords[i], sprites_group))
 
 
 #   Восстанавливает все значения для уровня
@@ -42,7 +39,6 @@ def restart(doodler, platforms: pg.sprite.Group):
         platform.restart()
     platforms.sprites()[0].rect.x = 255
     platforms.sprites()[0].rect.y = 985
-    pygame.mixer.music.play(-1)
 
 
 #   Записывает новый рекорд если он побит
@@ -77,7 +73,7 @@ def play(screen, level):
     clock = pg.time.Clock()
     pause = False
     pause_effect = pg.image.load("images/pause_effect.png")
-    pygame.mixer.music.play(-1)
+    pg.mixer.music.play(-1)
 
     # Главный
     while True:
@@ -120,7 +116,7 @@ def play(screen, level):
                 pygame.mixer.music.play(-1)
                 pause = False
 
-        if pause:
+        if pause or game_over or finish:
             continue
 
         screen.blit(background, (0, 0))
@@ -135,6 +131,7 @@ def play(screen, level):
         for monster in monsters_group:
             monster.move()
             monster.change_frame()
+            monster_sound.play()
 
         # Если персонаж находится выше 1/3 высоты то камера двигается вверх
         if doodler.jump_power < 0 and doodler.rect.y < HEIGHT // 3:
@@ -165,19 +162,24 @@ def play(screen, level):
 
         #   Проверка на победу
         if score >= finish_score:
+            screen.blit(pause_effect, (0, 0))
             finish = True
             update_record(level, finish_score)
             message(screen, ["FINISH!", "You unlock next level!" if not level + 1 in available_levels
                     else "You finish this level again!", "Press space to menu"], message_color)
             pygame.mixer.music.stop()
+            monster_sound.stop()
 
         #   Проверка на проигрыш
         if doodler.rect.y > HEIGHT:
+            screen.blit(pause_effect, (0, 0))
             game_over = True
             update_record(level, score)
             message(screen, ["GAME OVER", f"YOUR SCORE: {score}", "Press space to restart"], message_color)
             falling += 1
             pygame.mixer.music.stop()
+            monster_sound.stop()
+            falling_sound_play(falling)
 
         pg.display.update()
         clock.tick(FPS)

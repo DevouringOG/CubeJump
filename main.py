@@ -7,6 +7,8 @@ def terminate():
     pg.quit()
     sys.exit()
 
+
+pg.mixer.pre_init(44100, -16, 1, 512)
 pg.init()
 pg.display.set_caption("Doodle jump")
 
