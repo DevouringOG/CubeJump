@@ -18,9 +18,10 @@ class Doodler(pg.sprite.Sprite):
     def update(self, platforms, monsters_group):
         self.rect.y += self.jump_power
         self.jump_power += GRAVITY
+        #   Проверка на соприкосновение с монстрами и платформами
         for monster in monsters_group:
             if self.rect.colliderect(monster):
-                if self.jump_power >= 0 and monster.rect.y - self.rect.y >= 54:
+                if self.jump_power >= 0:
                     monster_sound.stop()
                     monster_jump_sound.play()
                     self.rect.bottom = monster.rect.top
@@ -38,11 +39,10 @@ class Doodler(pg.sprite.Sprite):
                     jump_sound.play()
                     self.rect.bottom = platform.rect.top
                     self.jump_power = -15
-                if platform.__class__ == BreakingPlatform:
-                    breaking_platform_sound.play()
-                    platform.crash = True
-                elif platform.__class__ == TeleportingPlatform:
-                    platform.teleport()
+                    if platform.__class__ == BreakingPlatform:
+                        breaking_platform_sound.play()
+                        platform.crash = True
+                        print(1)
 
     def move(self, keys):
         if keys[pg.K_RIGHT]:
@@ -54,9 +54,6 @@ class Doodler(pg.sprite.Sprite):
 
     def render(self, surface):
         surface.blit(self.image, self.rect)
-
-    def get_position(self):
-        return self.rect.x, self.rect.y
 
     def restart(self):
         self.rect.x = (WIDTH - self.rect.width) // 2

@@ -1,5 +1,4 @@
 import csv
-import random
 from Doodler import Doodler
 from Platforms import *
 from MenuScreens import start_screen
@@ -7,6 +6,7 @@ from Monster import *
 from Sound import *
 
 
+#   Показывает сообщение в игре
 def message(surface, text, color):
     text1 = game_over_font.render(text[0], True, 'black')
     text2 = font.render(text[1], True, 'black')
@@ -17,6 +17,7 @@ def message(surface, text, color):
     surface.blit(text3, ((WIDTH - text3.get_width()) // 2, 950))
 
 
+#   Создаёт платформы
 def create_platforms(platform_group, sprites_group, platforms_config):
     platform_group.add(Platform(255, 985, sprites_group))
     random.shuffle(platform_y_cords)
@@ -34,6 +35,7 @@ def create_platforms(platform_group, sprites_group, platforms_config):
                                                platform_y_cords[i], sprites_group))
 
 
+#   Восстанавливает все значения для уровня
 def restart(doodler, platforms: pg.sprite.Group):
     doodler.restart()
     for platform in platforms:
@@ -43,6 +45,7 @@ def restart(doodler, platforms: pg.sprite.Group):
     pygame.mixer.music.play(-1)
 
 
+#   Записывает новый рекорд если он побит
 def update_record(level, score):
     with open('records.csv', 'r') as records_file:
         reader = csv.DictReader(records_file, delimiter=';')
@@ -58,6 +61,7 @@ def update_record(level, score):
             writer.writerow(d)
 
 
+#   Основная функция игры
 def play(screen, level):
     level_config = levels_config[level]
     background = pg.image.load(f"images/level{level}_background.png")
@@ -75,25 +79,30 @@ def play(screen, level):
     pause_effect = pg.image.load("images/pause_effect.png")
     pygame.mixer.music.play(-1)
 
-    # Main loop
+    # Главный
     while True:
 
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 return
+            #   Проверка для паузы
             if event.type == pg.KEYDOWN and event.key == pg.K_ESCAPE:
                 pause = not pause
                 if pause:
                     screen.blit(pause_effect, (0, 0))
                     screen.blit(logo_font.render("PAUSE", True, "black"), ((WIDTH - 300) // 2, (HEIGHT - 119) // 2))
+                    screen.blit(restart_font.render("Press esc to continue", True, "black"), ((WIDTH - 197) // 2, 950))
                     pg.display.update()
                     break
+
+            #   Рестарт
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and game_over:
                 restart(doodler, platforms)
                 monsters_group = pg.sprite.Group()
                 score = max_doodler_y = game_over = falling = monsters = doodler.falling = 0
                 pygame.mixer.music.play(-1)
-                
+
+            #   Финиш
             if event.type == pg.KEYDOWN and event.key == pg.K_SPACE and finish:
                 available_levels.append(level + 1)
                 level = start_screen(screen, True)
@@ -127,23 +136,24 @@ def play(screen, level):
             monster.move()
             monster.change_frame()
 
-        # Camera
+        # Если персонаж находится выше 1/3 высоты то камера двигается вверх
         if doodler.jump_power < 0 and doodler.rect.y < HEIGHT // 3:
             while doodler.rect.y < HEIGHT // 3:
                 max_doodler_y -= 1
                 for sprite in all_sprites.sprites():
                     sprite.rect.y += 1
 
-        # Update score
+        # Обнавляет счётчик очков
         if doodler.jump_power == 0 and HEIGHT - doodler.rect.y > max_doodler_y:
             score += HEIGHT - doodler.rect.y - max_doodler_y
             max_doodler_y = HEIGHT - doodler.rect.y
 
-        # Show score
+        # Выводит текущие очки
         score_label = font.render(f"Score: {score}/{finish_score}" if finish_score != float("inf")
                                   else f"Score: {score}", True, 'black')
         screen.blit(score_label, (10, 10))
 
+        #   Создаёт монстров
         if monsters < score // 1000:
             if random.randint(0, 2):
                 monster = BlackMonster(pg.image.load("images/monster-sheet.png"), 3, 1, all_sprites)
@@ -153,7 +163,7 @@ def play(screen, level):
             all_sprites.add(monster)
             monsters += 1
 
-        # Game over check
+        #   Проверка на победу
         if score >= finish_score:
             finish = True
             update_record(level, finish_score)
@@ -161,6 +171,7 @@ def play(screen, level):
                     else "You finish this level again!", "Press space to menu"], message_color)
             pygame.mixer.music.stop()
 
+        #   Проверка на проигрыш
         if doodler.rect.y > HEIGHT:
             game_over = True
             update_record(level, score)

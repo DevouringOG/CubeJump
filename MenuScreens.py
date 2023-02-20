@@ -15,6 +15,7 @@ def start_screen(surface, levels_screen=False):
     surface.blit(logo, ((WIDTH - logo.get_width()) // 2, 200))
 
     gui_sprites = pg.sprite.Group()
+    #   Создание кнопок
     Button(((WIDTH - 300) // 2, 450), "start", START_BUTTON_EVENT, gui_sprites)
     Button(((WIDTH - 300) // 2, 550), "settings", SETTING_BUTTON_EVENT, gui_sprites)
     Button(((WIDTH - 300) // 2, 650), "about", ABOUT_BUTTON_EVENT, gui_sprites)
@@ -60,6 +61,7 @@ def levels_menu(surface):
     surface.blit(logo, ((WIDTH - logo.get_width()) // 2, 200))
 
     gui_sprites = pg.sprite.Group()
+    #   Создание кнопок
     Button((25, 400), "1", LEVEL1_BUTTON_EVENT, gui_sprites, base_image_filename="1level.png",
            hover_image_filename="1level_hover.png")
     Button((220, 400), "2", LEVEL2_BUTTON_EVENT, gui_sprites, base_image_filename="2level.png",
@@ -132,12 +134,10 @@ def settings_menu(surface):
                 volume += 0.1
                 set_volume(volume)
                 button_sound.play()
-                print("UP")
             if event.type == DOWN_SOUND_VALUE_EVENT.type:
                 volume -= 0.1
                 set_volume(volume)
                 button_sound.play()
-                print("DOWN")
             if event.type == OFF_EVENT.type:
                 print("OFF")
             if event.type == ON_EVENT.type:
@@ -193,6 +193,7 @@ def records(surface):
     Button((55, 405), "", BACK_BUTTON_EVENT, gui_sprites, base_image_filename="about_back_button.png",
            hover_image_filename="hover_about_back_button.png")
 
+    #   Чтение рекордов из csv файла
     with open('records.csv', 'r') as f:
         data = csv.DictReader(f, delimiter=';')
         s = [i for i in data]
