@@ -148,7 +148,7 @@ def play(screen, level):
             if random.randint(0, 2):
                 monster = BlackMonster(pg.image.load("images/monster-sheet.png"), 3, 1, all_sprites)
             else:
-                monster = RedMonster(pg.image.load("images/monster_sheet2.png"), 4, 1, all_sprites)
+                monster = RedMonster(pg.image.load("images/monster_sheet2.png"), 3, 1, all_sprites)
             monsters_group.add(monster)
             all_sprites.add(monster)
             monsters += 1
