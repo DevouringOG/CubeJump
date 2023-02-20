@@ -30,9 +30,6 @@ def create_platforms(platform_group, sprites_group, platforms_config):
     for i in range(sum(platforms_config[:2]), sum(platforms_config[:3])):
         platform_group.add(BreakingPlatform(random.randrange(0, WIDTH - 85),
                                             platform_y_cords[i], sprites_group))
-    for i in range(sum(platforms_config[:3]), 9):
-        platform_group.add(TeleportingPlatform(random.randrange(0, WIDTH - 85),
-                                               platform_y_cords[i], sprites_group))
 
 
 #   Восстанавливает все значения для уровня

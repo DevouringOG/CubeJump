@@ -37,4 +37,4 @@ levels_config = {1: {"message_color": (81, 73, 128), "platforms": (9, 0, 0, 0),
                  4: {"message_color": (94, 51, 150), "platforms": (3, 3, 3, 0),
                      "finish_score": float("inf")}}
 
-available_levels = [1, 2, 3]
+available_levels = [1]

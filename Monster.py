@@ -1,5 +1,4 @@
 from Config import *
-from Sound import *
 
 
 class Monster(pg.sprite.Sprite):  # Спрайт-класс монстра, родитель для красного и чёрного монстров
