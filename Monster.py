@@ -10,7 +10,7 @@ class Monster(pg.sprite.Sprite):  # Спрайт-класс монстра, ро
         self.cut_sheet(sheet, columns, rows)
         self.image = self.frames[self.cur_frame]
         self.rect = self.image.get_rect()
-        self.rect.x, self.rect.y = WIDTH // 2 + self.rect.x, 10
+        self.rect.x, self.rect.y = WIDTH // 2 + self.rect.x, -10
         self.velocity = 5
         self.frames_fps = 0
 

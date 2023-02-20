@@ -120,7 +120,7 @@ def play(screen, level):
                 pygame.mixer.music.play(-1)
                 pause = False
 
-        if pause:
+        if pause or game_over or finish:
             continue
 
         screen.blit(background, (0, 0))
@@ -165,6 +165,7 @@ def play(screen, level):
 
         #   Проверка на победу
         if score >= finish_score:
+            screen.blit(pause_effect, (0, 0))
             finish = True
             update_record(level, finish_score)
             message(screen, ["FINISH!", "You unlock next level!" if not level + 1 in available_levels
@@ -173,6 +174,7 @@ def play(screen, level):
 
         #   Проверка на проигрыш
         if doodler.rect.y > HEIGHT:
+            screen.blit(pause_effect, (0, 0))
             game_over = True
             update_record(level, score)
             message(screen, ["GAME OVER", f"YOUR SCORE: {score}", "Press space to restart"], message_color)
