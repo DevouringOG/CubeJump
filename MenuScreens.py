@@ -118,7 +118,7 @@ def settings_menu(surface):
     Button((20, 20), "back", BACK_BUTTON_EVENT, gui_sprites, base_image_filename="back_button.png",
            hover_image_filename="hover_back_button.png")
 
-    SpinBox(surface, (220, 400), 1, 1, 5, UP_SOUND_VALUE_EVENT, DOWN_SOUND_VALUE_EVENT, gui_sprites)
+    SpinBox(surface, (220, 400), int(volume * 10), 1, 5, UP_SOUND_VALUE_EVENT, DOWN_SOUND_VALUE_EVENT, gui_sprites)
 
     Switcher(surface, (50, 500), ON_EVENT, OFF_EVENT, gui_sprites)
 

@@ -2,7 +2,7 @@ from Config import *
 
 
 class Button(pg.sprite.Sprite):
-    FONT = pg.font.Font('minecraft-1-1.otf', 30)
+    FONT = pg.font.Font('fonts/minecraft-1-1.otf', 30)
 
     def __init__(self, position: tuple, text: str, event, gui_sprites,
                  base_image_filename='base_button.png', hover_image_filename='hover_button.png', lock=False):
@@ -12,15 +12,15 @@ class Button(pg.sprite.Sprite):
 
         self.text = self.FONT.render(text, True, 'black')
 
-        self.base_image = pg.image.load(f"images/{base_image_filename}")
+        self.base_image = pg.image.load(f"images/buttons/{base_image_filename}")
         self.base_image.blit(self.text, ((self.base_image.get_width() - self.text.get_width()) // 2,
                                          (self.base_image.get_height() - self.text.get_height()) // 2))
-        self.hover_image = pg.image.load(f"images/{hover_image_filename}")
+        self.hover_image = pg.image.load(f"images/buttons/{hover_image_filename}")
         self.hover_image.blit(self.text, ((self.hover_image.get_width() - self.text.get_width()) // 2,
                                           (self.hover_image.get_height() - self.text.get_height()) // 2))
 
         if lock:
-            lock_img = pg.image.load("images/lock.png")
+            lock_img = pg.image.load("images/buttons/lock.png")
             self.hover_image.blit(lock_img, (0, 0))
             self.base_image.blit(lock_img, (0, 0))
 
@@ -53,9 +53,9 @@ class SpinBox(pg.sprite.Sprite):
         self.max_value = max_value
         self.min_value = min_value
 
-        self.spin_box_image = pg.image.load("images/spin_box.png")
-        self.up_image = pg.image.load("images/spin_box_updown.png")
-        self.hover_up_image = pg.image.load("images/hover_spin_box_updown.png")
+        self.spin_box_image = pg.image.load("Images/buttons/spin_box.png")
+        self.up_image = pg.image.load("Images/buttons/spin_box_updown.png")
+        self.hover_up_image = pg.image.load("Images/buttons/hover_spin_box_updown.png")
         self.down_image = pg.transform.flip(self.up_image, False, True)
         self.hover_down_image = pg.transform.flip(self.hover_up_image, False, True)
 
@@ -109,12 +109,12 @@ class Switcher(pg.sprite.Sprite):
         self.switcher_position = (position[0] + 5, position[1] + 5)
         self.off = True
 
-        self.image = pg.image.load("images/switcher2.png")
+        self.image = pg.image.load("Images/buttons/switcher2.png")
         self.rect = self.image.get_rect()
         self.rect.x = self.switcher_position[0]
         self.rect.y = self.switcher_position[1]
 
-        self.switcher_image = pg.image.load("images/switcher.png")
+        self.switcher_image = pg.image.load("Images/buttons/switcher.png")
         surface.blit(self.switcher_image, self.position)
 
     def update(self, mouse_pos: tuple, mouse_click: bool):
