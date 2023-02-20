@@ -2,7 +2,7 @@ from Config import *
 
 
 class Button(pg.sprite.Sprite):
-    FONT = pg.font.Font('minecraft-1-1.otf', 30)
+    FONT = pg.font.Font('fonts/minecraft-1-1.otf', 30)
 
     def __init__(self, position: tuple, text: str, event, gui_sprites,
                  base_image_filename='base_button.png', hover_image_filename='hover_button.png', lock=False):
