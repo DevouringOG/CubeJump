@@ -103,7 +103,7 @@ def levels_menu(surface):
 
 
 def settings_menu(surface):
-    global volume
+    global volume, volume_is_on
 
     background = pg.image.load("images/setting_background.png")
     surface.blit(background, (0, 0))
@@ -132,15 +132,17 @@ def settings_menu(surface):
                 mouse_click = True
             if event.type == UP_SOUND_VALUE_EVENT.type:
                 volume += 0.1
-                set_volume(volume)
+                set_volume(volume, volume_is_on)
                 button_sound.play()
             if event.type == DOWN_SOUND_VALUE_EVENT.type:
                 volume -= 0.1
-                set_volume(volume)
+                set_volume(volume, volume_is_on)
                 button_sound.play()
             if event.type == OFF_EVENT.type:
+                volume_is_on = sound_switcher(volume_is_on)
                 print("OFF")
             if event.type == ON_EVENT.type:
+                volume_is_on = sound_switcher(volume_is_on)
                 print("ON")
             if event.type == BACK_BUTTON_EVENT.type:
                 button_sound.play()

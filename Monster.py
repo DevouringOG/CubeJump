@@ -1,4 +1,6 @@
 from Config import *
+from Sound import monster_sound
+
 
 
 class Monster(pg.sprite.Sprite):  # Спрайт-класс монстра, родитель для красного и чёрного монстров
@@ -40,6 +42,10 @@ class BlackMonster(Monster):  # Монстр, двигающийся вдоль 
             self.velocity *= -1
         elif self.rect.x <= 10:
             self.velocity *= -1
+        if self.rect.y > HEIGHT:
+            self.kill()
+            monster_sound.stop()
+
 
 
 class RedMonster(Monster):  # Монстр, двигающийся вдоль оси Y
@@ -49,3 +55,6 @@ class RedMonster(Monster):  # Монстр, двигающийся вдоль о
     def move(self):
         self.frames_fps += 1
         self.rect.y += self.velocity
+        if self.rect.y > HEIGHT:
+            self.kill()
+            monster_sound.stop()
