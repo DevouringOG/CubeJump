@@ -10,6 +10,7 @@ logo_font = pg.font.Font('logo_font.ttf', 85)
 
 GRAVITY = 0.75
 volume = 0.1
+volume_is_on = True
 platform_y_cords = [i for i in range(100, 985, 100)]
 
 #   Создание всех ивентов

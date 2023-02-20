@@ -21,7 +21,7 @@ class Doodler(pg.sprite.Sprite):
         #   Проверка на соприкосновение с монстрами и платформами
         for monster in monsters_group:
             if self.rect.colliderect(monster):
-                if self.jump_power >= 0:
+                if self.jump_power >= 0 and monster.rect.y - self.rect.y >= 10:
                     monster_sound.stop()
                     monster_jump_sound.play()
                     self.rect.bottom = monster.rect.top
